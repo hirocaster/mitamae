@@ -10,7 +10,7 @@ module MItamae
             run_specinfra(:change_file_mode, desired.path, desired.mode)
           end
           if desired.owner || desired.group
-            run_specinfra(:change_file_owner, desired.path, desired.owner, desired.group)
+            run_specinfra(:change_file_owner, desired.path, desired.owner, escape_name(desired.group))
           end
         else
           if FileTest.directory?(desired.path)
@@ -51,6 +51,10 @@ module MItamae
 
       def normalize_mode(mode)
         sprintf("%4s", mode).gsub(/ /, '0')
+      end
+
+      def escape_name(name)
+        name.gsub('\\', '\\\\\\').gsub(' ', '\ ') if name
       end
     end
   end

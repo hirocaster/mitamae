@@ -14,7 +14,7 @@ module MItamae
           end
 
           if desired.owner || desired.group
-            run_specinfra(:change_file_owner, change_target, desired.owner || current.owner, desired.group || current.group)
+            run_specinfra(:change_file_owner, change_target, desired.owner || current.owner, escape_name(desired.group) || escape_name(current.group))
           end
 
           if @modified
@@ -176,6 +176,10 @@ module MItamae
             fout.write(fin.read)
           end
         end
+      end
+
+      def escape_name(name)
+        name.gsub('\\', '\\\\\\').gsub(' ', '\ ') if name
       end
     end
   end
